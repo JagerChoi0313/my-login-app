@@ -8,7 +8,7 @@
 //如果LoginForm.js里写的是命名导出，就需要加：{}
 
 //因此要写成
-import LoginForm from '@/components/login/loginForm';
+import LoginForm from '@/components/login/LoginForm';
 
 
 //第二步：定义一个叫LoginPage的组件
