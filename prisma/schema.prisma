@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+
+//Prisma是一个给Node.js/TypeScript用的ORM（对象关系映射工具），用来更方便的操控数据库
+//prisma使用的的是一种叫PSL（Prisma Scheme Language）的声明式语言
+//它的核心是描述你想要的数据结构，剩下交给Prisma生成
+
+//1.定义生成器（Generator）
+generator client{
+  provider="prisma-client-js"
+}
+
+//generator相当于告诉Prisma：“请为我生成一套操作数据库的代码工具库”
+// provider="prisma-client-js"指定生成JS或者TS版本的数据库
+//语法逻辑：当你运行npx prisma gennerate时，他会根据这个配置在node_modules里创建一个Prisma实例
+//让你能像调用方法般操纵这个数据库（比如：db.user.findMany())
+
+
+
+//数据库资源配置（DataSource）
+datasource db{
+  provider="mysql"
+  url=env("DATABASE_URL")
+}
+
+//datasource决定了物理数据库的连接方式
+//provider="mysql":明确告诉Prisma的底层是MySQL，不同的数据库生成SQL语句时会有细微差别
+//url="env("DATABASE_URL)":安全性语法。不要把数据库的密码明文写在代码里，而是通过env()函数去读取.env
+//文件里的环境变量
+
+
+//模型定义（Model):数据库的“图纸”
+model User{
+  id        Int     @id @default(autoincrement())
+  email     String  @unique
+  password  String  
+  createAt DateTime @default(now())
+  @@map("user")
+}
+
+//model User：定义一个模型，在 TS 中它会对应一个类型，在 MySQL 中对应一张表。
+//@id：语法标记，声明这是 主键（每一行数据的唯一标识）。
+//@default(autoincrement())：告诉 MySQL 自动增加 ID 数字（1, 2, 3...），
+//你不需要手动传这个值。
+//String vs Int：这是 Prisma 的类型系统。String 对应 MySQL 的 VARCHAR，Int 对应 INT。
+//@unique：业务逻辑约束。确保数据库里不会有两个相同的邮箱。
+//@default(now())：自动记录创建时间。
+//@@map("users")：映射语法。Prisma 习惯模型名首字母大写单数（User），但数据库表习惯小写复数（users），
+//                这个语法用来做这种转换。
+
+
